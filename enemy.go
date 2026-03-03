@@ -5,6 +5,10 @@ type Enemy struct {
 	health int
 }
 
-func takeDamage(enemy *Enemy, damage *int) {
+func (enemy *Enemy) getHealth() int {
+	return enemy.health
+}
+
+func (enemy *Enemy) takeDamage(damage *int) {
 	enemy.health -= *damage
 }

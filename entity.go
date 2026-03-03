@@ -5,11 +5,11 @@ type Entity struct {
 	symbol   string
 }
 
-func getPosition(entity *Entity) [2]int {
+func (entity *Entity) getPosition() [2]int {
 	return entity.position
 }
 
-func setPosition(entity *Entity, x *int, y *int) {
+func (entity *Entity) setPosition(x *int, y *int) {
 	entity.position[0] = *x
 	entity.position[1] = *y
 }
