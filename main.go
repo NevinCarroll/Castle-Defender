@@ -14,3 +14,8 @@ func main() {
 
 	fmt.Println(enemy.getPosition())
 }
+
+
+func readTrackFile() {
+	
+}

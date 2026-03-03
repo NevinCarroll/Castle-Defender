@@ -6,4 +6,3 @@ type Tower struct {
 	damage int
 	attackRate int // Might delete
 }
-
