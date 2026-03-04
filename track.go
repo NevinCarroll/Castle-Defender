@@ -1,9 +1,9 @@
 package main
 
 type Track struct {
-	layout [][]int
+	layout [][]string
 }
 
-func (track *Track) getLayout() [][]int {
+func (track *Track) getLayout() [][]string {
 	return track.layout
 }
