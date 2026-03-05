@@ -24,10 +24,7 @@ A turn-based tower defense game written in Go for the console. Defend your base 
    ```bash
    go run .
    ```
-
-### Building
-```bash
-go build
+   
 ```
 
 ## How to Play
