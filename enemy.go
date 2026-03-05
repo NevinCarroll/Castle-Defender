@@ -32,6 +32,7 @@ func (enemy *Enemy) getHealth() int {
 
 // takeDamage subtracts the provided value from the enemy's health.
 // The damage is passed by pointer to match existing call sites.
+// 
 func (enemy *Enemy) takeDamage(damage *int) {
 	enemy.health -= *damage
 }

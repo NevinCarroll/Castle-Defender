@@ -7,10 +7,6 @@ package main
 // Entity to reuse common positioning fields and adds attributes for range,
 // damage, cost and attack speed. Towers target enemies within their
 // Manhattan-radius and inflict damage each turn.
-//
-// The tower behaviour is intentionally simple: fixed stats and
-// instant damage on hit. Future improvements might include different
-// tower types or upgrade mechanics.
 type Tower struct {
 	Entity
 	radius     int

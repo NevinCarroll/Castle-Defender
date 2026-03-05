@@ -25,11 +25,6 @@ A turn-based tower defense game written in Go for the console. Defend your base 
    go run .
    ```
 
-### Building
-```bash
-go build
-```
-
 ## How to Play
 
 ### Objective
@@ -65,6 +60,13 @@ Prevent enemies from reaching the end of the path (`*`). You lose a life each ti
 - **Wave Size**: 1 enemy per wave
 - **Starting Position**: Beginning of the path
 
+### Game Symbols
+- `E` - Enemy
+- `T` - Tower
+- `1` - Path
+- `*` - End point
+- `0` - Empty space
+
 ### Track Format
 The game reads track layouts from `tracks/track.txt`:
 - `0`: Empty space (valid for tower placement)
@@ -98,26 +100,3 @@ Example track:
 ├── go.mod           # Go module file
 └── README.md        # This file
 ```
-
-## Game Symbols
-
-- `E` - Enemy
-- `T` - Tower
-- `1` - Path
-- `*` - End point
-- `0` - Empty space
-
-## Game Stats Display
-
-The game shows real-time statistics:
-- **Lives**: Remaining lives (start with 3)
-- **Gold**: Current gold (start with 300)
-- **Enemies**: Current enemies on the field
-- **Towers**: Towers you've placed
-- **Waves**: Number of enemy waves spawned
-
-## Creating New Tracks
-1. Create a new `.txt` file in the `tracks/` directory
-2. Use `0`, `1`, and `*` characters
-3. Ensure exactly 10 rows and 15 columns
-4. Update the file path in `main.go` `readTrackFile()` call

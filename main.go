@@ -14,11 +14,12 @@ var track Track      // single global track instance
 var enemies []*Enemy // active enemies on the map
 var towers []*Tower  // placed towers
 
+// Player stats
 var lives int = 3
 var gold int = 300
 
 var gameOver bool = false
-var manualQuit bool
+var manualQuit bool = false
 
 // spawn counters used to pace enemy waves
 var enemySpawnCounter int = 0
@@ -26,7 +27,7 @@ var waveCount int = 0
 
 const ROW_COUNT = 10
 const COLUMN_COUNT = 15
-const ENEMIES_PER_WAVE = 1
+const ENEMIES_PER_WAVE = 1 // If higher than one, multiple enemies will occupy the same tile.
 
 // main initializes the game state, presents a tutorial, and then
 // enters the primary game loop. The loop renders the map each turn,
@@ -53,7 +54,7 @@ func main() {
 		render()
 
 		// Display turn info
-		fmt.Printf("\n--- TURN %d ---\n", turn)
+		fmt.Printf("--- TURN %d ---", turn)
 		fmt.Print("Commands: (n)ext turn, (p)lace tower, (q)uit: ")
 
 		// Wait for player input
@@ -134,7 +135,7 @@ func advanceTurn() {
 		}
 	}
 
-	// Auto-spawn enemies at end of turn
+	// Spawn enemies at end of turn
 	enemySpawnCounter++
 	if enemySpawnCounter >= 2 { // Spawn every 2 turns
 		spawnEnemyWave()
@@ -326,8 +327,7 @@ func displayGameOver() {
 }
 
 // clearConsole sends ANSI sequences to clear and reposition the
-// terminal cursor. It is primarily tested on Windows in this project
-// but should function in many ANSI-compatible environments.
+// terminal cursor.
 func clearConsole() {
 	// Clear screen - works on Windows
 	fmt.Printf("\033[2J\033[H")
@@ -382,11 +382,13 @@ func showTutorial() {
 func readTrackFile(filePath string) {
 	var trackData, err = os.Open(filePath)
 
+	// Check for errors
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	defer trackData.Close()
 
+	// Check to ensure track file has enough rows
 	var countScanner = bufio.NewScanner(trackData)
 
 	var rows int
@@ -398,10 +400,12 @@ func readTrackFile(filePath string) {
 		panic("Invalid row count for file")
 	}
 
+	// Reset file counter, starts back at the first line
 	trackData.Seek(0, 0)
 
 	var trackLayout [ROW_COUNT][COLUMN_COUNT]string
 
+	// Scan each row and put it in the matrix
 	var scanner = bufio.NewScanner(trackData)
 	var rowIndex int = 0
 	for scanner.Scan() {
