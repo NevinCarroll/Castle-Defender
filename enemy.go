@@ -18,7 +18,7 @@ type Enemy struct {
 // track when spawned.
 func NewEnemy() *Enemy {
 	enemy := &Enemy{
-		health: 3, // Increased health - towers need to hit multiple times
+		health: 5, 
 	}
 	enemy.symbol = "E"
 	enemy.pathIndex = 0
