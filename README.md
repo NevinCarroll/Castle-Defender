@@ -1,4 +1,4 @@
-# Go Tower Defense Game
+# Castle Defender
 
 A turn-based tower defense game written in Go for the console. Defend your base by strategically placing towers to stop waves of enemies from reaching the end of the path!
 
