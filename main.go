@@ -329,7 +329,7 @@ func displayGameOver() {
 // clearConsole sends ANSI sequences to clear and reposition the
 // terminal cursor.
 func clearConsole() {
-	// Clear screen - works on Windows
+	// Clear screen, first ANSI character is clear screen, second one resets terminal position to beginning of line
 	fmt.Printf("\033[2J\033[H")
 }
 
