@@ -1,3 +1,6 @@
+// Package main drives the console-based tower defense game. It
+// defines the game loop, rendering logic, input handling, and
+// high‑level orchestration of enemies, towers, and resources.
 package main
 
 import (
@@ -7,9 +10,9 @@ import (
 	"strings"
 )
 
-var track Track
-var enemies []*Enemy
-var towers []*Tower
+var track Track      // single global track instance
+var enemies []*Enemy // active enemies on the map
+var towers []*Tower  // placed towers
 
 var lives int = 3
 var gold int = 300
@@ -17,6 +20,7 @@ var gold int = 300
 var gameOver bool = false
 var manualQuit bool
 
+// spawn counters used to pace enemy waves
 var enemySpawnCounter int = 0
 var waveCount int = 0
 
@@ -24,6 +28,10 @@ const ROW_COUNT = 10
 const COLUMN_COUNT = 15
 const ENEMIES_PER_WAVE = 1
 
+// main initializes the game state, presents a tutorial, and then
+// enters the primary game loop. The loop renders the map each turn,
+// processes player commands, advances enemy movement, and handles
+// spawning and resource updates until the game ends.
 func main() {
 	readTrackFile("./tracks/track.txt")
 
@@ -78,6 +86,10 @@ func main() {
 	displayGameOver()
 }
 
+// advanceTurn processes all movements and actions that occur on a
+// single game turn. Enemies progress along the path, towers select and
+// attack the farthest enemy within range, destroyed enemies are removed
+// and award gold, and new waves spawn periodically.
 func advanceTurn() {
 	// Move enemies
 	for i := 0; i < len(enemies); i++ {
@@ -130,6 +142,10 @@ func advanceTurn() {
 	}
 }
 
+// placeTowerMenu displays prompts allowing the player to enter a
+// coordinate for a new tower. Input is parsed and validated, and the
+// actual placement logic is delegated to placeTower. The menu may be
+// cancelled by entering -1.
 func placeTowerMenu() {
 	clearConsole()
 	render()
@@ -162,6 +178,9 @@ func placeTowerMenu() {
 	placeTower(row, col)
 }
 
+// placeTower attempts to add a new tower at the specified grid
+// location. It validates gold, bounds, path occupancy, and duplicate
+// towers before deducting cost and appending to the towers slice.
 func placeTower(row int, col int) {
 	towerCost := NewTower(0, 0).getCost()
 
@@ -200,6 +219,9 @@ func placeTower(row int, col int) {
 	fmt.Printf("Tower placed at (%d, %d)! Gold remaining: %d\n", row, col, gold)
 }
 
+// spawnEnemyWave creates a new group of enemies at the path
+// starting point and increments the global wave counter. It uses the
+// constant ENEMIES_PER_WAVE to decide how many to add.
 func spawnEnemyWave() {
 	waveCount++
 	path := track.getPath()
@@ -216,17 +238,25 @@ func spawnEnemyWave() {
 	fmt.Printf("Wave %d spawned with %d enemies!\n", waveCount, ENEMIES_PER_WAVE)
 }
 
+// loseLife deducts one life and prints a warning message when an
+// enemy reaches the end of the path.
 func loseLife() {
 	lives--
 	fmt.Println("\n!!! ENEMY REACHED THE END !!!")
 	fmt.Println("Lives remaining:", lives)
 }
 
+// earnGold increases the player's gold by the specified amount and
+// reports the new total.
 func earnGold(amount int) {
 	gold += amount
 	fmt.Printf("Enemy defeated! Earned %d gold. Total: %d\n", amount, gold)
 }
 
+// render redraws the game map and overlays towers and enemies on
+// their current positions. After rendering the grid, it prints status
+// information such as lives, gold, enemy count, tower count, and
+// wave number.
 func render() {
 	clearConsole()
 
@@ -273,6 +303,9 @@ func render() {
 	println("")
 }
 
+// displayGameOver clears the screen and shows a game-over message
+// along with final statistics. The message varies slightly if the
+// player quit manually versus losing all lives.
 func displayGameOver() {
 	clearConsole()
 	println("")
@@ -292,11 +325,18 @@ func displayGameOver() {
 	println("Final gold:", gold)
 }
 
+// clearConsole sends ANSI sequences to clear and reposition the
+// terminal cursor. It is primarily tested on Windows in this project
+// but should function in many ANSI-compatible environments.
 func clearConsole() {
 	// Clear screen - works on Windows
 	fmt.Printf("\033[2J\033[H")
 }
 
+// showTutorial presents the player with game instructions and waits
+// until the user acknowledges by typing 'y'. It explains objectives,
+// tile meanings, controls, and resource information. The tutorial is
+// displayed at startup before gameplay begins.
 func showTutorial() {
 	clearConsole()
 	println("")
@@ -335,7 +375,10 @@ func showTutorial() {
 	}
 }
 
-// Reads a track file
+// readTrackFile loads a grid definition from a text file. It verifies
+// the expected row count, parses each character into the track layout,
+// and then initializes the global track object. The file is assumed to
+// contain exactly ROW_COUNT lines of COLUMN_COUNT characters each.
 func readTrackFile(filePath string) {
 	var trackData, err = os.Open(filePath)
 

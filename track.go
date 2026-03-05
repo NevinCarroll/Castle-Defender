@@ -1,24 +1,53 @@
+// Package main implements a simple console-based track
+// representation and parsing for a racing or path-following game.
+//
+// The Track type encapsulates a fixed-size grid layout and can
+// extract an ordered sequence of coordinates representing the
+// path defined by "1" cells within that grid.
 package main
 
+// Track holds the map layout and the extracted path from that layout.
+// layout is a 10×15 grid of strings where "1" marks path segments and
+// "*" may also be treated as part of the active path. The path slice
+// contains coordinates in the order they are traversed.
+//
+// Methods on Track allow setting the layout, retrieving the layout and
+// path, and internally parsing the layout to compute the path.
 type Track struct {
 	layout [10][15]string
 	path   [][2]int // Ordered path coordinates
 }
 
+// setLayout assigns a new grid to the track and triggers a
+// re-parsing of the path contained within that grid. The provided
+// layout must be exactly 10 rows by 15 columns.
 func (track *Track) setLayout(layout [10][15]string) {
 	track.layout = layout
 	track.parsePath()
 }
 
+// getLayout returns a copy of the track's current grid layout.
+// Callers should treat the returned array as read-only; modifying it
+// does not affect the internal state of the Track instance.
 func (track *Track) getLayout() [10][15]string {
 	return track.layout
 }
 
+// getPath returns the slice of coordinates representing the parsed
+// path. Each element is a two‑element array containing row and column
+// indices. The slice is ordered from the start of the path to its end.
 func (track *Track) getPath() [][2]int {
 	return track.path
 }
 
-// parsePath extracts the path from the layout by following 1s from the start
+// parsePath examines the layout grid, locates the first cell marked
+// "1" (searching from the top-left), and then follows adjacent cells
+// marked "1" or "*" in a straight path. The result is stored in the
+// track.path field as an ordered list of [row, column] pairs.
+//
+// The algorithm avoids backtracking by remembering the previous cell
+// and only considers new neighbours. If no starting cell is found the
+// path slice is left empty.
 func (track *Track) parsePath() {
 	var path [][2]int
 
