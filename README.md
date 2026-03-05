@@ -14,7 +14,7 @@ A turn-based tower defense game written in Go for the console. Defend your base 
 ## Quick Start
 
 ### Prerequisites
-- Go 1.25.0 or later
+- Go 1.26.0
 
 ### Installation & Running
 
